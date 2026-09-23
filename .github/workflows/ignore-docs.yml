@@ -1,0 +1,14 @@
+name: Ignore Docs Workflow
+
+on:
+  push:
+    paths-ignore:
+      - '*.md'
+      - 'docs/**'
+
+jobs:
+  run-pipeline:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Pipeline Execution
+        run: echo "Pipeline executed! (This run was not skipped because non-doc files were changed)."
