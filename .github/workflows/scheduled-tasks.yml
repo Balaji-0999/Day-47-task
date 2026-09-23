@@ -1,0 +1,27 @@
+name: Scheduled Health Check Tasks
+
+on:
+  schedule:
+    - cron: '30 2 * * 1'   # Every Monday at 2:30 AM UTC
+    - cron: '0 */6 * * *'  # Every 6 hours
+  workflow_dispatch:        # Manual trigger button for testing
+
+jobs:
+  health-check-job:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Print Scheduled Cron Expression
+        run: |
+          echo "Schedule pattern that triggered this run: ${{ github.event.schedule }}"
+
+      - name: Perform System Health Check
+        run: |
+          echo "Checking system health status..."
+          STATUS=$(curl -s -o /dev/null -w "%{http_code}" https://httpbin.org/status/200)
+          echo "HTTP Response Status: $STATUS"
+          if [ "$STATUS" -eq 200 ]; then
+            echo "Health check passed!"
+          else
+            echo "Health check failed with status code $STATUS"
+            exit 1
+          fi
